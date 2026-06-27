@@ -6,7 +6,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SIGPPC</title>
-
     <link rel="stylesheet" href="style.css">
 </head>
 
@@ -14,44 +13,147 @@
 
 <div class="container">
 
-    <aside class="menu">
+    <aside class="sidebar">
 
-        <h2>SIGPPC</h2>
+        <div class="logo">
+            <h2>SIGPPC</h2>
+            <p>Sistema Inteligente de Gestão de PPC</p>
+        </div>
 
-        <ul>
-            <li>🏠 Dashboard</li>
-            <li>📄 Modelos de PPC</li>
-            <li>📚 PPCs</li>
-            <li>📖 Biblioteca INEP</li>
-            <li>📊 Relatórios</li>
-            <li>⚙ Configurações</li>
-        </ul>
+        <nav>
+
+            <button class="menu-btn active" data-page="dashboard">
+                🏠 Dashboard
+            </button>
+
+            <button class="menu-btn" data-page="modelos">
+                🏛 Modelos de PPC
+            </button>
+
+            <button class="menu-btn" data-page="ppcs">
+                📘 PPCs
+            </button>
+
+            <button class="menu-btn" data-page="bases">
+                📚 Bases Legais
+            </button>
+
+            <button class="menu-btn" data-page="relatorios">
+                📊 Relatórios
+            </button>
+
+            <button class="menu-btn" data-page="configuracoes">
+                ⚙️ Configurações
+            </button>
+
+        </nav>
 
     </aside>
 
-    <main class="conteudo">
+    <main id="conteudo">
 
-        <h1>Bem-vindo ao SIGPPC</h1>
+        <section id="dashboard" class="pagina">
 
-        <p>
-            Plataforma Inteligente para Gestão de Projetos Pedagógicos de Curso.
-        </p>
+            <h1>Dashboard</h1>
 
-        <div class="card">
+            <div class="cards">
 
-            <h2>Nenhum modelo cadastrado</h2>
+                <div class="card">
+                    <h3>Modelos de PPC</h3>
+                    <p id="totalModelos">0</p>
+                </div>
 
-            <p>
-                O primeiro passo é criar um Modelo de PPC.
-            </p>
+                <div class="card">
+                    <h3>PPCs</h3>
+                    <p id="totalPpcs">0</p>
+                </div>
 
-            <button>Criar Modelo de PPC</button>
+                <div class="card">
+                    <h3>Bases Legais</h3>
+                    <p>0</p>
+                </div>
 
-        </div>
+                <div class="card">
+                    <h3>Relatórios</h3>
+                    <p>Em breve</p>
+                </div>
+
+            </div>
+
+            <div class="painel">
+
+                <h2>Atividades</h2>
+
+                <p>Nenhuma atividade registrada.</p>
+
+            </div>
+
+        </section>
+
+        <section id="modelos" class="pagina oculta">
+
+            <div class="topo">
+
+                <h1>Modelos de PPC</h1>
+
+                <button id="novoModelo">
+                    + Novo Modelo
+                </button>
+
+            </div>
+
+            <div id="listaModelos">
+
+                Nenhum modelo cadastrado.
+
+            </div>
+
+        </section>
+
+        <section id="ppcs" class="pagina oculta">
+
+            <h1>PPCs dos Cursos</h1>
+
+            <p>Nenhum PPC cadastrado.</p>
+
+            <button>Novo PPC</button>
+
+        </section>
+
+        <section id="bases" class="pagina oculta">
+
+            <h1>Bases Legais</h1>
+
+            <ul>
+                <li>Instrumentos de Avaliação</li>
+                <li>Diretrizes Curriculares</li>
+                <li>Legislação</li>
+                <li>Normas Institucionais</li>
+            </ul>
+
+        </section>
+
+        <section id="relatorios" class="pagina oculta">
+
+            <h1>Relatórios</h1>
+
+            <p>Em desenvolvimento.</p>
+
+        </section>
+
+        <section id="configuracoes" class="pagina oculta">
+
+            <h1>Configurações</h1>
+
+            <p>Em desenvolvimento.</p>
+
+        </section>
 
     </main>
 
 </div>
+
+<script src="app.js"></script>
 
 </body>
 
