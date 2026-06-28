@@ -69,14 +69,17 @@ function renderPPCs() {
 
   section.innerHTML = `
     <button onclick="addPPC()" class="btn">+ Novo PPC</button>
+
     <div class="list">
       ${state.ppcs.map(p => `
-        <div class="item">
+        <div class="item" onclick="openPPC(${p.id})" style="cursor:pointer">
           <strong>${p.nome}</strong>
-          <small>ID: ${p.id}</small>
+          <small style="display:block;color:#6b7280;">Clique para abrir</small>
         </div>
       `).join("")}
     </div>
+
+    <div id="ppc-detail"></div>
   `;
 }
 
