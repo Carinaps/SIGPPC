@@ -26,6 +26,7 @@ function saveState() {
 // ESTADO GLOBAL
 // -------------------------------
 let state = loadState();
+let selectedPPC = null;
 
 // -------------------------------
 // ELEMENTOS
@@ -101,6 +102,45 @@ function renderModelos() {
 // -------------------------------
 // FUNÇÕES DE CRIAÇÃO
 // -------------------------------
+function openPPC(id) {
+  selectedPPC = state.ppcs.find(p => p.id === id);
+  renderPPCDetail();
+}
+function renderPPCDetail() {
+  const container = document.getElementById("ppc-detail");
+  function savePPC() {
+  const input = document.getElementById("ppc-name");
+
+  selectedPPC.nome = input.value;
+
+  state.ppcs = state.ppcs.map(p =>
+    p.id === selectedPPC.id ? selectedPPC : p
+  );
+
+  saveState();
+  renderAll();
+  renderPPCDetail();
+}
+
+  if (!selectedPPC) {
+    container.innerHTML = "";
+    return;
+  }
+
+  container.innerHTML = `
+    <div class="panel" style="margin-top:20px;">
+      <h3>Editar PPC</h3>
+
+      <label>Nome:</label>
+      <input id="ppc-name" value="${selectedPPC.nome}" style="width:100%;padding:8px;margin:8px 0;border:1px solid #e5e7eb;border-radius:8px;"/>
+
+      <div style="display:flex;gap:10px;">
+        <button class="btn" onclick="savePPC()">Salvar</button>
+        <button class="btn" style="background:#9ca3af" onclick="closePPC()">Fechar</button>
+      </div>
+    </div>
+  `;
+}
 function addPPC() {
   const nome = prompt("Nome do PPC:");
   if (!nome) return;
