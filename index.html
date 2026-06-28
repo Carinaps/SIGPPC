@@ -5,151 +5,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>SIGPPC</title>
+
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-<div class="container">
+<div class="layout">
 
+    <!-- MENU -->
     <aside class="sidebar">
 
         <div class="logo">
-            <h2>SIGPPC</h2>
-            <p>Sistema Inteligente de Gestão de PPC</p>
+            <h1>SIGPPC</h1>
+            <span>Sistema de Gestão de PPC</span>
         </div>
 
         <nav>
 
-            <button class="menu-btn active" data-page="dashboard">
-                🏠 Dashboard
+            <button class="menu-item active" data-page="dashboard">
+                📊 Dashboard
             </button>
 
-            <button class="menu-btn" data-page="modelos">
-                🏛 Modelos de PPC
+            <button class="menu-item" data-page="ppcs">
+                📄 PPCs
             </button>
 
-            <button class="menu-btn" data-page="ppcs">
-                📘 PPCs
+            <button class="menu-item" data-page="modelos">
+                📁 Modelos
             </button>
 
-            <button class="menu-btn" data-page="bases">
-                📚 Bases Legais
+            <button class="menu-item" data-page="bases">
+                ⚖ Bases Legais
             </button>
 
-            <button class="menu-btn" data-page="relatorios">
-                📊 Relatórios
-            </button>
-
-            <button class="menu-btn" data-page="configuracoes">
-                ⚙️ Configurações
+            <button class="menu-item" data-page="relatorios">
+                📈 Relatórios
             </button>
 
         </nav>
 
     </aside>
 
-    <main id="conteudo">
+    <!-- CONTEÚDO -->
+    <main class="content">
 
-        <section id="dashboard" class="pagina">
+        <!-- DASHBOARD -->
+        <section id="dashboard" class="page active">
 
-            <h1>Dashboard</h1>
+            <h2>Dashboard</h2>
 
             <div class="cards">
 
                 <div class="card">
-                    <h3>Modelos de PPC</h3>
-                    <p id="totalModelos">0</p>
+                    <span>PPCs</span>
+                    <h3 id="totalPPC">0</h3>
                 </div>
 
                 <div class="card">
-                    <h3>PPCs</h3>
-                    <p id="totalPpcs">0</p>
+                    <span>Modelos</span>
+                    <h3 id="totalModelos">0</h3>
                 </div>
 
                 <div class="card">
-                    <h3>Bases Legais</h3>
-                    <p>0</p>
+                    <span>Versões</span>
+                    <h3 id="totalVersoes">0</h3>
                 </div>
 
                 <div class="card">
-                    <h3>Relatórios</h3>
-                    <p>Em breve</p>
+                    <span>Bases Legais</span>
+                    <h3 id="totalBases">0</h3>
                 </div>
-
-            </div>
-
-            <div class="painel">
-
-                <h2>Atividades</h2>
-
-                <p>Nenhuma atividade registrada.</p>
 
             </div>
 
         </section>
 
-        <section id="modelos" class="pagina oculta">
+        <!-- PPCs -->
+        <section id="ppcs" class="page">
 
-            <div class="topo">
+            <div class="page-header">
 
-                <h1>Modelos de PPC</h1>
+                <h2>PPCs</h2>
 
-                <button id="novoModelo">
-                    + Novo Modelo
+                <button id="novoPPC">
+                    + Novo PPC
                 </button>
 
             </div>
 
-            <div id="listaModelos">
-
-                Nenhum modelo cadastrado.
+            <div id="listaPPCs">
 
             </div>
 
         </section>
 
-        <section id="ppcs" class="pagina oculta">
+        <!-- MODELOS -->
+        <section id="modelos" class="page">
 
-            <h1>PPCs dos Cursos</h1>
+            <h2>Modelos de PPC</h2>
 
-            <p>Nenhum PPC cadastrado.</p>
+            <div class="box">
 
-            <button>Novo PPC</button>
+                Em desenvolvimento.
 
-        </section>
-
-        <section id="bases" class="pagina oculta">
-
-            <h1>Bases Legais</h1>
-
-            <ul>
-                <li>Instrumentos de Avaliação</li>
-                <li>Diretrizes Curriculares</li>
-                <li>Legislação</li>
-                <li>Normas Institucionais</li>
-            </ul>
+            </div>
 
         </section>
 
-        <section id="relatorios" class="pagina oculta">
+        <!-- BASES -->
+        <section id="bases" class="page">
 
-            <h1>Relatórios</h1>
+            <h2>Bases Legais</h2>
 
-            <p>Em desenvolvimento.</p>
+            <div class="box">
+
+                Em desenvolvimento.
+
+            </div>
 
         </section>
 
-        <section id="configuracoes" class="pagina oculta">
+        <!-- RELATÓRIOS -->
+        <section id="relatorios" class="page">
 
-            <h1>Configurações</h1>
+            <h2>Relatórios</h2>
 
-            <p>Em desenvolvimento.</p>
+            <div class="box">
+
+                Em desenvolvimento.
+
+            </div>
 
         </section>
 
     </main>
+
+</div>
+
+<!-- Modal -->
+
+<div id="modal" class="modal hidden">
+
+    <div class="modal-content">
+
+        <h2>Novo PPC</h2>
+
+        <input
+            id="nomePPC"
+            type="text"
+            placeholder="Nome do PPC">
+
+        <div class="acoes">
+
+            <button id="salvarPPC">
+                Salvar
+            </button>
+
+            <button id="cancelarModal">
+                Cancelar
+            </button>
+
+        </div>
+
+    </div>
 
 </div>
 
