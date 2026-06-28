@@ -1,48 +1,58 @@
 
-
 // ===============================
-// SIGPPC - APP.JS (SPRINT 1)
+// SIGPPC - SPRINT 2 (FUNCIONAL)
 // ===============================
 
 // -------------------------------
-// DADOS INICIAIS (MOCK)
+// STORAGE HELPERS
 // -------------------------------
-const state = {
-  ppcs: [],
-  modelos: [],
-  versoes: [],
-  bases: []
-};
+function loadState() {
+  const data = localStorage.getItem("sigppc_state");
+  if (data) return JSON.parse(data);
+
+  return {
+    ppcs: [],
+    modelos: [],
+    versoes: [],
+    bases: []
+  };
+}
+
+function saveState() {
+  localStorage.setItem("sigppc_state", JSON.stringify(state));
+}
 
 // -------------------------------
-// ELEMENTOS DO DOM
+// ESTADO GLOBAL
+// -------------------------------
+let state = loadState();
+
+// -------------------------------
+// ELEMENTOS
 // -------------------------------
 const menuItems = document.querySelectorAll(".menu-item");
 const sections = document.querySelectorAll(".section");
 
 // -------------------------------
-// NAVEGAÇÃO ENTRE SEÇÕES
+// NAVEGAÇÃO
 // -------------------------------
 menuItems.forEach((item) => {
   item.addEventListener("click", () => {
-    const target = item.getAttribute("data-section");
+    const target = item.dataset.section;
 
-    // remove active do menu
-    menuItems.forEach((i) => i.classList.remove("active"));
+    menuItems.forEach(i => i.classList.remove("active"));
     item.classList.add("active");
 
-    // troca seção ativa
-    sections.forEach((sec) => {
-      sec.classList.remove("active");
-      if (sec.id === target) {
-        sec.classList.add("active");
-      }
+    sections.forEach(sec => {
+      sec.classList.toggle("active", sec.id === target);
     });
+
+    renderAll();
   });
 });
 
 // -------------------------------
-// ATUALIZAR DASHBOARD
+// RENDER DASHBOARD
 // -------------------------------
 function updateDashboard() {
   document.getElementById("count-ppcs").textContent = state.ppcs.length;
@@ -52,73 +62,84 @@ function updateDashboard() {
 }
 
 // -------------------------------
-// FUNÇÕES FUTURAS (BASE)
+// RENDER LISTAS
 // -------------------------------
+function renderPPCs() {
+  const section = document.querySelector("#ppcs .panel");
 
-// Criar PPC (base para Sprint futura)
-function createPPC(nome) {
-  const novoPPC = {
-    id: Date.now(),
-    nome,
-    createdAt: new Date(),
-    versoes: []
-  };
-
-  state.ppcs.push(novoPPC);
-  updateDashboard();
-  return novoPPC;
+  section.innerHTML = `
+    <button onclick="addPPC()" class="btn">+ Novo PPC</button>
+    <div class="list">
+      ${state.ppcs.map(p => `
+        <div class="item">
+          <strong>${p.nome}</strong>
+          <small>ID: ${p.id}</small>
+        </div>
+      `).join("")}
+    </div>
+  `;
 }
 
-// Criar Modelo
-function createModelo(nome) {
-  const modelo = {
-    id: Date.now(),
-    nome,
-    createdAt: new Date()
-  };
+function renderModelos() {
+  const section = document.querySelector("#modelos .panel");
 
-  state.modelos.push(modelo);
-  updateDashboard();
-  return modelo;
-}
-
-// Criar Base Legal
-function createBaseLegal(titulo) {
-  const base = {
-    id: Date.now(),
-    titulo,
-    createdAt: new Date()
-  };
-
-  state.bases.push(base);
-  updateDashboard();
-  return base;
-}
-
-// Criar Versão de PPC
-function createVersao(ppcId, descricao) {
-  const versao = {
-    id: Date.now(),
-    ppcId,
-    descricao,
-    createdAt: new Date()
-  };
-
-  state.versoes.push(versao);
-  updateDashboard();
-  return versao;
+  section.innerHTML = `
+    <button onclick="addModelo()" class="btn">+ Novo Modelo</button>
+    <div class="list">
+      ${state.modelos.map(m => `
+        <div class="item">
+          <strong>${m.nome}</strong>
+        </div>
+      `).join("")}
+    </div>
+  `;
 }
 
 // -------------------------------
-// INICIALIZAÇÃO
+// FUNÇÕES DE CRIAÇÃO
+// -------------------------------
+function addPPC() {
+  const nome = prompt("Nome do PPC:");
+  if (!nome) return;
+
+  state.ppcs.push({
+    id: Date.now(),
+    nome,
+    createdAt: new Date()
+  });
+
+  saveState();
+  renderAll();
+}
+
+function addModelo() {
+  const nome = prompt("Nome do Modelo:");
+  if (!nome) return;
+
+  state.modelos.push({
+    id: Date.now(),
+    nome,
+    createdAt: new Date()
+  });
+
+  saveState();
+  renderAll();
+}
+
+// -------------------------------
+// RENDER GERAL
+// -------------------------------
+function renderAll() {
+  updateDashboard();
+  renderPPCs();
+  renderModelos();
+}
+
+// -------------------------------
+// INIT
 // -------------------------------
 function init() {
-  updateDashboard();
-
-  // dados iniciais de teste (opcional)
-  createModelo("Modelo Base Engenharias");
-  createBaseLegal("LDB 9.394/96");
-  createPPC("Engenharia de Software");
+  renderAll();
 }
 
 init();
