@@ -1,86 +1,165 @@
-/* ==========================================
-   utils.js
-   Funções auxiliares do SIGPPC
-========================================== */
-
 /**
- * Seleciona um elemento
+ * ==========================================
+ * SIGPPC - UTILITÁRIOS GLOBAIS
+ * ==========================================
+ * Arquivo: utils.js
+ * Responsabilidade: funções auxiliares do sistema
+ * Sem dependências de outros módulos
+ * ==========================================
  */
-function $(seletor) {
-    return document.querySelector(seletor);
-}
 
-/**
- * Seleciona vários elementos
- */
-function $$(seletor) {
-    return document.querySelectorAll(seletor);
-}
+const Utils = (() => {
 
-/**
- * Gera um ID único
- */
-function gerarId() {
+    /**
+     * =========================
+     * 🔹 DATA E IDENTIFICADORES
+     * =========================
+     */
 
-    return Date.now().toString(36) +
-        Math.random().toString(36).substring(2, 8);
+    function gerarId(prefix = "id") {
+        return `${prefix}_${Date.now()}_${Math.floor(Math.random() * 10000)}`;
+    }
 
-}
+    function formatarData(data = new Date()) {
+        const d = new Date(data);
+        return d.toLocaleDateString("pt-BR");
+    }
 
-/**
- * Retorna data atual formatada
- */
-function dataAtual() {
+    function formatarDataHora(data = new Date()) {
+        const d = new Date(data);
+        return d.toLocaleString("pt-BR");
+    }
 
-    return new Date().toLocaleDateString(
-        "pt-BR"
-    );
+    function anoAtual() {
+        return new Date().getFullYear();
+    }
 
-}
+    /**
+     * =========================
+     * 🔹 OBJETOS E SEGURANÇA
+     * =========================
+     */
 
-/**
- * Mostra mensagem simples
- */
-function mensagem(texto) {
+    function deepClone(obj) {
+        return JSON.parse(JSON.stringify(obj));
+    }
 
-    alert(texto);
+    function isEmpty(value) {
+        return value === null ||
+            value === undefined ||
+            (typeof value === "string" && value.trim() === "") ||
+            (Array.isArray(value) && value.length === 0);
+    }
 
-}
+    function validarObjeto(obj, camposObrigatorios = []) {
+        if (!obj) return false;
 
-/**
- * Confirma uma ação
- */
-function confirmar(texto) {
+        return camposObrigatorios.every(campo =>
+            obj.hasOwnProperty(campo) && !isEmpty(obj[campo])
+        );
+    }
 
-    return confirm(texto);
+    /**
+     * =========================
+     * 🔹 STRINGS
+     * =========================
+     */
 
-}
+    function normalizarTexto(texto) {
+        if (!texto) return "";
+        return texto
+            .toString()
+            .trim()
+            .toLowerCase()
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, ""); // remove acentos
+    }
 
-/**
- * Remove espaços extras
- */
-function limparTexto(texto) {
+    function capitalizar(texto) {
+        if (!texto) return "";
+        return texto.charAt(0).toUpperCase() + texto.slice(1);
+    }
 
-    return texto.trim();
+    /**
+     * =========================
+     * 🔹 DOM (INTERFACE)
+     * =========================
+     */
 
-}
+    function qs(selector, parent = document) {
+        return parent.querySelector(selector);
+    }
 
-/**
- * Verifica se string está vazia
- */
-function vazio(texto) {
+    function qsa(selector, parent = document) {
+        return [...parent.querySelectorAll(selector)];
+    }
 
-    return texto.trim() === "";
+    function criarElemento(tag, classes = [], texto = "") {
+        const el = document.createElement(tag);
+        if (classes.length) el.classList.add(...classes);
+        if (texto) el.textContent = texto;
+        return el;
+    }
 
-}
+    function limparElemento(el) {
+        if (el) el.innerHTML = "";
+    }
 
-/**
- * Clona um objeto
- */
-function copiar(objeto) {
+    function mostrar(el) {
+        if (el) el.style.display = "";
+    }
 
-    return JSON.parse(
-        JSON.stringify(objeto)
-    );
+    function esconder(el) {
+        if (el) el.style.display = "none";
+    }
 
-}
+    /**
+     * =========================
+     * 🔹 LOGS E DEBUG
+     * =========================
+     */
+
+    function log(...args) {
+        console.log("[SIGPPC]", ...args);
+    }
+
+    function warn(...args) {
+        console.warn("[SIGPPC]", ...args);
+    }
+
+    function error(...args) {
+        console.error("[SIGPPC]", ...args);
+    }
+
+    /**
+     * =========================
+     * 🔹 EXPORT PÚBLICO
+     * =========================
+     */
+
+    return {
+        gerarId,
+        formatarData,
+        formatarDataHora,
+        anoAtual,
+
+        deepClone,
+        isEmpty,
+        validarObjeto,
+
+        normalizarTexto,
+        capitalizar,
+
+        qs,
+        qsa,
+        criarElemento,
+        limparElemento,
+        mostrar,
+        esconder,
+
+        log,
+        warn,
+        error
+    };
+
+})();
