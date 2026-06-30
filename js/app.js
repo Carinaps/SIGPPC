@@ -1,12 +1,12 @@
 // ===============================
-// SIGPPC - APP (ARQUITETURA LIMPA)
+// SIGPPC - APP (VERSÃO LIMPA FUNCIONAL)
 // ===============================
 
-// 🔥 ÚNICO estado do sistema
+// 🔥 ESTADO GLOBAL (único dono no app.js)
 let state = loadState();
 
 // -------------------------------
-// NAV / ELEMENTOS
+// ELEMENTOS
 // -------------------------------
 const menuItems = document.querySelectorAll(".menu-item");
 const pages = document.querySelectorAll(".page");
@@ -41,7 +41,7 @@ function updateDashboard() {
 }
 
 // -------------------------------
-// PPCs
+// PPC LISTA
 // -------------------------------
 function renderPPCs() {
     const container = document.getElementById("listaPPCs");
@@ -51,7 +51,7 @@ function renderPPCs() {
 
         <div>
             ${state.ppcs.map(p => `
-                <div onclick="openPPC(${p.id})" style="cursor:pointer">
+                <div onclick="openPPC(${p.id})" style="cursor:pointer; padding:8px; border-bottom:1px solid #eee;">
                     <strong>${p.nome}</strong>
                 </div>
             `).join("")}
@@ -82,10 +82,10 @@ function renderPPCDetail(ppc) {
     }
 
     container.innerHTML = `
-        <div>
+        <div style="margin-top:20px; padding:10px; border:1px solid #ddd;">
             <h3>Editar PPC</h3>
 
-            <input id="ppc-name" value="${ppc.nome}" />
+            <input id="ppc-name" value="${ppc.nome}" style="padding:8px; width:100%; margin:10px 0;" />
 
             <button onclick="savePPC(${ppc.id})">Salvar</button>
             <button onclick="closePPC()">Fechar</button>
@@ -110,7 +110,7 @@ function savePPC(id) {
 }
 
 // -------------------------------
-// FECHAR
+// FECHAR DETALHE
 // -------------------------------
 function closePPC() {
     renderAll();
@@ -146,3 +146,11 @@ function renderAll() {
 // INIT
 // -------------------------------
 renderAll();
+
+// -------------------------------
+// 🔥 EXPOSIÇÃO GLOBAL (resolve onclick)
+// -------------------------------
+window.addPPC = addPPC;
+window.openPPC = openPPC;
+window.savePPC = savePPC;
+window.closePPC = closePPC;
