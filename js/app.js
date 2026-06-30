@@ -1,168 +1,148 @@
 // ===============================
-// SIGPPC - APP (SPRINT 2 LIMPO)
+// SIGPPC - APP (ARQUITETURA LIMPA)
 // ===============================
 
-// -------------------------------
-// ESTADO GLOBAL (ÚNICO)
-// -------------------------------
+// 🔥 ÚNICO estado do sistema
 let state = loadState();
-let selectedPPC = null;
 
 // -------------------------------
-// ELEMENTOS DOM
+// NAV / ELEMENTOS
 // -------------------------------
 const menuItems = document.querySelectorAll(".menu-item");
-const sections = document.querySelectorAll(".page");
+const pages = document.querySelectorAll(".page");
 
 // -------------------------------
 // NAVEGAÇÃO
 // -------------------------------
-menuItems.forEach((item) => {
-  item.addEventListener("click", () => {
-    const target = item.dataset.page;
+menuItems.forEach(item => {
+    item.addEventListener("click", () => {
 
-    menuItems.forEach(i => i.classList.remove("active"));
-    item.classList.add("active");
+        const target = item.dataset.page;
 
-    sections.forEach(sec => {
-      sec.classList.toggle("active", sec.id === target);
+        menuItems.forEach(i => i.classList.remove("active"));
+        item.classList.add("active");
+
+        pages.forEach(p => {
+            p.classList.toggle("active", p.id === target);
+        });
+
+        renderAll();
     });
-
-    renderAll();
-  });
 });
 
 // -------------------------------
 // DASHBOARD
 // -------------------------------
 function updateDashboard() {
-  document.getElementById("totalPPC").textContent = state.ppcs.length;
-  document.getElementById("totalModelos").textContent = state.modelos.length;
-  document.getElementById("totalVersoes").textContent = state.versoes.length;
-  document.getElementById("totalBases").textContent = state.bases.length;
+    document.getElementById("totalPPC").textContent = state.ppcs.length;
+    document.getElementById("totalModelos").textContent = state.modelos.length;
+    document.getElementById("totalVersoes").textContent = state.versoes.length;
+    document.getElementById("totalBases").textContent = state.bases.length;
 }
 
 // -------------------------------
 // PPCs
 // -------------------------------
 function renderPPCs() {
-  const container = document.getElementById("listaPPCs");
+    const container = document.getElementById("listaPPCs");
 
-  container.innerHTML = `
-    <button onclick="addPPC()" id="btnNovoPPC">+ Novo PPC</button>
+    container.innerHTML = `
+        <button onclick="addPPC()">+ Novo PPC</button>
 
-    <div class="lista">
-      ${state.ppcs.map(p => `
-        <div class="item" onclick="openPPC(${p.id})" style="cursor:pointer">
-          <strong>${p.nome}</strong>
-          <small>Clique para editar</small>
+        <div>
+            ${state.ppcs.map(p => `
+                <div onclick="openPPC(${p.id})" style="cursor:pointer">
+                    <strong>${p.nome}</strong>
+                </div>
+            `).join("")}
         </div>
-      `).join("")}
-    </div>
 
-    <div id="ppc-detail"></div>
-  `;
-}
-
-// -------------------------------
-// MODELOS (placeholder Sprint 2)
-// -------------------------------
-function renderModelos() {
-  // Mantido simples por enquanto (Sprint 3 melhora isso)
+        <div id="ppc-detail"></div>
+    `;
 }
 
 // -------------------------------
 // ABRIR PPC
 // -------------------------------
 function openPPC(id) {
-  selectedPPC = state.ppcs.find(p => p.id === id);
-  renderPPCDetail();
+    const ppc = state.ppcs.find(p => p.id === id);
+    renderPPCDetail(ppc);
 }
 
 // -------------------------------
 // DETALHE PPC
 // -------------------------------
-function renderPPCDetail() {
-  const container = document.getElementById("ppc-detail");
+function renderPPCDetail(ppc) {
 
-  if (!selectedPPC) {
-    container.innerHTML = "";
-    return;
-  }
+    const container = document.getElementById("ppc-detail");
 
-  container.innerHTML = `
-    <div class="modal-box">
-      <h3>Editar PPC</h3>
+    if (!ppc) {
+        container.innerHTML = "";
+        return;
+    }
 
-      <input id="ppc-name" value="${selectedPPC.nome}" />
+    container.innerHTML = `
+        <div>
+            <h3>Editar PPC</h3>
 
-      <div class="actions">
-        <button onclick="savePPC()">Salvar</button>
-        <button onclick="closePPC()">Fechar</button>
-      </div>
-    </div>
-  `;
+            <input id="ppc-name" value="${ppc.nome}" />
+
+            <button onclick="savePPC(${ppc.id})">Salvar</button>
+            <button onclick="closePPC()">Fechar</button>
+        </div>
+    `;
 }
 
 // -------------------------------
 // SALVAR PPC
 // -------------------------------
-function savePPC() {
-  const input = document.getElementById("ppc-name");
+function savePPC(id) {
 
-  if (!selectedPPC || !input) return;
+    const input = document.getElementById("ppc-name");
 
-  selectedPPC.nome = input.value;
+    state.ppcs = state.ppcs.map(p =>
+        p.id === id ? { ...p, nome: input.value } : p
+    );
 
-  state.ppcs = state.ppcs.map(p =>
-    p.id === selectedPPC.id ? selectedPPC : p
-  );
+    saveState(state);
 
-  saveState(state);
-
-  renderAll();
-  renderPPCDetail();
+    renderAll();
 }
 
 // -------------------------------
-// FECHAR PPC
+// FECHAR
 // -------------------------------
 function closePPC() {
-  selectedPPC = null;
-  renderPPCDetail();
+    renderAll();
 }
 
 // -------------------------------
 // ADICIONAR PPC
 // -------------------------------
 function addPPC() {
-  const nome = prompt("Nome do PPC:");
-  if (!nome) return;
 
-  state.ppcs.push({
-    id: Date.now(),
-    nome,
-    createdAt: new Date()
-  });
+    const nome = prompt("Nome do PPC:");
+    if (!nome) return;
 
-  saveState(state);
-  renderAll();
+    state.ppcs.push({
+        id: Date.now(),
+        nome
+    });
+
+    saveState(state);
+
+    renderAll();
 }
 
 // -------------------------------
 // RENDER GERAL
 // -------------------------------
 function renderAll() {
-  updateDashboard();
-  renderPPCs();
-  renderModelos();
+    updateDashboard();
+    renderPPCs();
 }
 
 // -------------------------------
 // INIT
 // -------------------------------
-function init() {
-  renderAll();
-}
-
-init();
+renderAll();
