@@ -1,45 +1,25 @@
-
 // ===============================
-// SIGPPC - SPRINT 2 (FUNCIONAL)
+// SIGPPC - APP (SPRINT 2 LIMPO)
 // ===============================
 
 // -------------------------------
-// STORAGE HELPERS
-// -------------------------------
-function loadState() {
-  const data = localStorage.getItem("sigppc_state");
-  if (data) return JSON.parse(data);
-
-  return {
-    ppcs: [],
-    modelos: [],
-    versoes: [],
-    bases: []
-  };
-}
-
-function saveState() {
-  localStorage.setItem("sigppc_state", JSON.stringify(state));
-}
-
-// -------------------------------
-// ESTADO GLOBAL
+// ESTADO GLOBAL (ÚNICO)
 // -------------------------------
 let state = loadState();
 let selectedPPC = null;
 
 // -------------------------------
-// ELEMENTOS
+// ELEMENTOS DOM
 // -------------------------------
 const menuItems = document.querySelectorAll(".menu-item");
-const sections = document.querySelectorAll(".section");
+const sections = document.querySelectorAll(".page");
 
 // -------------------------------
 // NAVEGAÇÃO
 // -------------------------------
 menuItems.forEach((item) => {
   item.addEventListener("click", () => {
-    const target = item.dataset.section;
+    const target = item.dataset.page;
 
     menuItems.forEach(i => i.classList.remove("active"));
     item.classList.add("active");
@@ -53,29 +33,29 @@ menuItems.forEach((item) => {
 });
 
 // -------------------------------
-// RENDER DASHBOARD
+// DASHBOARD
 // -------------------------------
 function updateDashboard() {
-  document.getElementById("count-ppcs").textContent = state.ppcs.length;
-  document.getElementById("count-modelos").textContent = state.modelos.length;
-  document.getElementById("count-versoes").textContent = state.versoes.length;
-  document.getElementById("count-bases").textContent = state.bases.length;
+  document.getElementById("totalPPC").textContent = state.ppcs.length;
+  document.getElementById("totalModelos").textContent = state.modelos.length;
+  document.getElementById("totalVersoes").textContent = state.versoes.length;
+  document.getElementById("totalBases").textContent = state.bases.length;
 }
 
 // -------------------------------
-// RENDER LISTAS
+// PPCs
 // -------------------------------
 function renderPPCs() {
-  const section = document.querySelector("#ppcs .panel");
+  const container = document.getElementById("listaPPCs");
 
-  section.innerHTML = `
-    <button onclick="addPPC()" class="btn">+ Novo PPC</button>
+  container.innerHTML = `
+    <button onclick="addPPC()" id="btnNovoPPC">+ Novo PPC</button>
 
-    <div class="list">
+    <div class="lista">
       ${state.ppcs.map(p => `
         <div class="item" onclick="openPPC(${p.id})" style="cursor:pointer">
           <strong>${p.nome}</strong>
-          <small style="display:block;color:#6b7280;">Clique para abrir</small>
+          <small>Clique para editar</small>
         </div>
       `).join("")}
     </div>
@@ -84,43 +64,26 @@ function renderPPCs() {
   `;
 }
 
+// -------------------------------
+// MODELOS (placeholder Sprint 2)
+// -------------------------------
 function renderModelos() {
-  const section = document.querySelector("#modelos .panel");
-
-  section.innerHTML = `
-    <button onclick="addModelo()" class="btn">+ Novo Modelo</button>
-    <div class="list">
-      ${state.modelos.map(m => `
-        <div class="item">
-          <strong>${m.nome}</strong>
-        </div>
-      `).join("")}
-    </div>
-  `;
+  // Mantido simples por enquanto (Sprint 3 melhora isso)
 }
 
 // -------------------------------
-// FUNÇÕES DE CRIAÇÃO
+// ABRIR PPC
 // -------------------------------
 function openPPC(id) {
   selectedPPC = state.ppcs.find(p => p.id === id);
   renderPPCDetail();
 }
+
+// -------------------------------
+// DETALHE PPC
+// -------------------------------
 function renderPPCDetail() {
   const container = document.getElementById("ppc-detail");
-  function savePPC() {
-  const input = document.getElementById("ppc-name");
-
-  selectedPPC.nome = input.value;
-
-  state.ppcs = state.ppcs.map(p =>
-    p.id === selectedPPC.id ? selectedPPC : p
-  );
-
-  saveState();
-  renderAll();
-  renderPPCDetail();
-}
 
   if (!selectedPPC) {
     container.innerHTML = "";
@@ -128,19 +91,50 @@ function renderPPCDetail() {
   }
 
   container.innerHTML = `
-    <div class="panel" style="margin-top:20px;">
+    <div class="modal-box">
       <h3>Editar PPC</h3>
 
-      <label>Nome:</label>
-      <input id="ppc-name" value="${selectedPPC.nome}" style="width:100%;padding:8px;margin:8px 0;border:1px solid #e5e7eb;border-radius:8px;"/>
+      <input id="ppc-name" value="${selectedPPC.nome}" />
 
-      <div style="display:flex;gap:10px;">
-        <button class="btn" onclick="savePPC()">Salvar</button>
-        <button class="btn" style="background:#9ca3af" onclick="closePPC()">Fechar</button>
+      <div class="actions">
+        <button onclick="savePPC()">Salvar</button>
+        <button onclick="closePPC()">Fechar</button>
       </div>
     </div>
   `;
 }
+
+// -------------------------------
+// SALVAR PPC
+// -------------------------------
+function savePPC() {
+  const input = document.getElementById("ppc-name");
+
+  if (!selectedPPC || !input) return;
+
+  selectedPPC.nome = input.value;
+
+  state.ppcs = state.ppcs.map(p =>
+    p.id === selectedPPC.id ? selectedPPC : p
+  );
+
+  saveState(state);
+
+  renderAll();
+  renderPPCDetail();
+}
+
+// -------------------------------
+// FECHAR PPC
+// -------------------------------
+function closePPC() {
+  selectedPPC = null;
+  renderPPCDetail();
+}
+
+// -------------------------------
+// ADICIONAR PPC
+// -------------------------------
 function addPPC() {
   const nome = prompt("Nome do PPC:");
   if (!nome) return;
@@ -151,21 +145,7 @@ function addPPC() {
     createdAt: new Date()
   });
 
-  saveState();
-  renderAll();
-}
-
-function addModelo() {
-  const nome = prompt("Nome do Modelo:");
-  if (!nome) return;
-
-  state.modelos.push({
-    id: Date.now(),
-    nome,
-    createdAt: new Date()
-  });
-
-  saveState();
+  saveState(state);
   renderAll();
 }
 
